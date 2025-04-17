@@ -29,14 +29,14 @@ Ensure you have the following installed:
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/fastapi-bank-api.git
-cd fastapi-bank-api
-cd fast_api_test
+git clone https://github.com/Mhammad2022Ibrahim/test-daman-api.git
+cd test-daman-api
+code .
 ```
 
 2. **Create a virtual environment**
 ```bash
-python -m venv venv
+virtualenv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
@@ -57,6 +57,11 @@ Navigate to http://localhost:8000 to access the root endpoint.
 Interactive Swagger UI: http://localhost:8000/docs
 
 ReDoc: http://localhost:8000/redoc
+
+6. **Testing**
+```bash
+pytest -v
+```
 
 ---
 ## API Endpoints

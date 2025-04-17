@@ -12,7 +12,6 @@ class Account(Base):
     balance = Column(Float, nullable = False, default = 0.0)
     phone = Column(String(20), unique = True)
     address = Column(String(100))
-    # created_at = Column(DateTime, default = datetime.utcnow)
     created_at = Column(DateTime, default = datetime.now())
     updated_at = Column(DateTime, default = datetime.now(), onupdate = datetime.now())
 
@@ -26,7 +25,5 @@ class Transaction(Base):
     transaction_type = Column(String(20), nullable = False)
     created_at = Column(DateTime, default = datetime.now())
     updated_at = Column(DateTime, default = datetime.now(), onupdate = datetime.now())
-    # created_at = Column(DateTime, default = datetime.utcnow)
-    # updated_at = Column(DateTime, default = datetime.utcnow, onupdate = datetime.utcnow)
 
     account = relationship('Account', back_populates = 'transactions')
