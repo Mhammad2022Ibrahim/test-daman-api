@@ -43,7 +43,7 @@ def create_transaction(request: schemas.CreateTransaction, db: Session = Depends
 def get_transactions(account_id: int, start_date: str, end_date: str, db: Session = Depends(database.get_db)):
     account = db.query(models.Account).filter(models.Account.id == account_id).first()
     if not account:
-        raise HTTPException(status_code=404, detail="Account don't have transactions")
+        raise HTTPException(status_code=404, detail="Account not found")
         
     transactions = db.query(models.Transaction).filter(
         models.Transaction.account_id == account_id,

@@ -68,6 +68,7 @@ pytest -v
 
 ### Account
 **POST /accounts/ – Create an account**
+
 **PUT /accounts/{account_id} – Update account**
 
 ### Transaction

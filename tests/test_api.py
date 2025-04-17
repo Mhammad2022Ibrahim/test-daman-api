@@ -25,7 +25,7 @@ def test_all():
     account_id = data["id"]  # <-- dynamic ID
 
     update_data = UpdateAccount(email=f"khaled_email_{account_id}_updated@gmail.com")
-    # Use f-string to interpolate account_id
+    
     update_response = client.put(f"/accounts/{account_id}", json=update_data.model_dump(exclude_unset=True))
     assert update_response.status_code == 200
 
@@ -54,6 +54,19 @@ def test_create_account():
     assert response.status_code == 200
     assert response.json()["message"].startswith("Account created successfully for")
 
+
+def test_duplicate_account():
+    account = CreateAccount(
+        name="mahmoud",
+        email="zahraaibrahim13@gmail.com", 
+        phone="9617033333",        
+        balance=1000.0,
+        address="Akkar"
+    )
+    response = client.post("/accounts/", json=account.model_dump())
+    assert response.status_code == 400, response.json()
+    assert response.json()["detail"] == "Account with this email already exists"
+
 def test_update_account():
     account = UpdateAccount(
         email = "zahraaibrahim13@gmail.com"
@@ -62,7 +75,7 @@ def test_update_account():
     response = client.put("/accounts/3", json=account.model_dump(exclude_unset=True))
     assert response.status_code == 200
 
-def test_create_transaction():
+def test_create_transaction_deposit():
     transaction = CreateTransaction(
         amount = 100.0,
         transaction_type = "deposit",
@@ -71,7 +84,27 @@ def test_create_transaction():
     response = client.post("/transactions/", json=transaction.model_dump())
     assert response.status_code == 200
 
+def test_create_transaction_insufficient_balance():
+    transaction = CreateTransaction(
+        amount = 1000000.0,
+        transaction_type = "withdrawal",
+        account_id = 4
+    )
+    response = client.post("/transactions/", json=transaction.model_dump())
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Insufficient funds"
+
 def test_get_transactions():
     response = client.get("/transactions/3?start_date=2025-01-01&end_date=2025-04-30")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+
+def test_get_transactions_not_find_account():
+    response = client.get("/transactions/100?start_date=2025-01-01&end_date=2025-04-30")
+    assert response.status_code == 404, response.json()
+    assert response.json()["detail"] == "Account not found"
+
+def test_get_transactions_invalid_date_range():
+    response = client.get("/transactions/3?start_date=2021-04-30&end_date=2024-01-01")
+    assert response.status_code == 404, response.json()
+    assert response.json()["detail"] == "No transactions found for this account in the given date range"
